@@ -35,6 +35,7 @@ public class PlatformerMovement : MonoBehaviour
 
     [SerializeField] private Animator animator;
     [SerializeField] private GameObject settingsMenu;
+    [SerializeField] private AudioSource hurtAudioSound;
 
     
     void Awake()
@@ -158,6 +159,7 @@ public class PlatformerMovement : MonoBehaviour
         if (controlEnabled)
         {
             moveInput = context.ReadValue<Vector2>().normalized;
+            DissapearingText.playerHasMoved = true;
         }
         else
         {
@@ -197,11 +199,9 @@ public class PlatformerMovement : MonoBehaviour
         }
     }
 
-    IEnumerator onTakenHit()
+    public void onTakenHit()
     {
-        spriteRenderer.color = Color.red;
-        rb.AddForceX(10f);
-        yield return new WaitForSeconds(0.5f);
-        spriteRenderer.color = Color.white;
+        hurtAudioSound.PlayOneShot(hurtAudioSound.clip);
+        Debug.Log("onTakenHit");
     }
 }

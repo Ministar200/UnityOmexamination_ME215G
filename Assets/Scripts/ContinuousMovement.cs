@@ -17,6 +17,7 @@ public class ContinuousMovement : MonoBehaviour
 
     private Vector3 originalPosition;
     [SerializeField] SpriteRenderer spriteRenderer;
+    [SerializeReference] AudioSource enemyNoisesSource;
 
     private bool active;
     
@@ -42,7 +43,8 @@ public class ContinuousMovement : MonoBehaviour
             || transform.position.x < originalPosition.x - 5)
         {
             InvertVelocity();
-            spriteRenderer.flipX = true;    
+            spriteRenderer.flipX = true;   
+            enemyNoisesSource.PlayOneShot(enemyNoisesSource.clip);
         }
     }
 
