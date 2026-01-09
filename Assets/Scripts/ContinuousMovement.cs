@@ -1,5 +1,7 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 // This class makes an object move in a specified direction
@@ -11,6 +13,7 @@ public class ContinuousMovement : MonoBehaviour
 {
     [Tooltip("The direction and speed of the movement. A value of (1,0,0) will move the object to the right at the speed of 1 m/s")]
     [SerializeField] private Vector3 velocity;
+    [SerializeField] private Vector3 pointToTurn;
 
     [Tooltip("Set to true if the object should start moving as soon as it is loaded into the scene. Set to false if you want to control when the object should start moving.")]
     [SerializeField] private bool activeOnStart;
@@ -20,7 +23,14 @@ public class ContinuousMovement : MonoBehaviour
     [SerializeReference] AudioSource enemyNoisesSource;
 
     private bool active;
-    
+
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.red;
+        
+        Gizmos.DrawWireSphere(pointToTurn, 0.5f);
+    }
+
     // Awake is called before the first frame update
     void Awake()
     {
@@ -39,11 +49,11 @@ public class ContinuousMovement : MonoBehaviour
             transform.position += (velocity * Time.deltaTime);
         }
 
-        if (transform.position.x > originalPosition.x + 5
-            || transform.position.x < originalPosition.x - 5)
+        if (transform.position.x > originalPosition.x + (pointToTurn.x - originalPosition.x)
+            || transform.position.x < originalPosition.x - (pointToTurn.x - originalPosition.x))
         {
             InvertVelocity();
-            spriteRenderer.flipX = true;   
+            spriteRenderer.flipX = !spriteRenderer.flipX;   
             enemyNoisesSource.PlayOneShot(enemyNoisesSource.clip);
         }
     }
@@ -76,5 +86,10 @@ public class ContinuousMovement : MonoBehaviour
         velocity.x = -velocity.x;
         velocity.y = -velocity.y;
         velocity.z = -velocity.z;
+    }
+
+    private void FlipSprite()
+    {
+        spriteRenderer.flipX = !spriteRenderer.flipX;
     }
 }

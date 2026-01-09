@@ -160,6 +160,7 @@ public class PlatformerMovement : MonoBehaviour
         {
             moveInput = context.ReadValue<Vector2>().normalized;
             DissapearingText.playerHasMoved = true;
+            DissapearingImage.playerHasMoved = true;
         }
         else
         {
