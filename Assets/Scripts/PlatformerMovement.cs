@@ -1,7 +1,9 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.Serialization;
 
-            /////////////// INFORMATION ///////////////
+/////////////// INFORMATION ///////////////
 // This script automatically adds a Rigidbody2D, CapsuleCollider2D and CircleCollider2D component in the inspector.
 // The Rigidbody2D component should (probably) have some constraints: Freeze Rotation Z
 // The Circle Collider 2D should be set to "is trigger", resized and moved to a proper position for ground check.
@@ -32,6 +34,8 @@ public class PlatformerMovement : MonoBehaviour
     private bool isGrounded;
 
     [SerializeField] private Animator animator;
+    [SerializeField] private GameObject settingsMenu;
+
     
     void Awake()
     {
@@ -177,5 +181,27 @@ public class PlatformerMovement : MonoBehaviour
             jumpReleased = true;
             jumpInput = false;
         }
+    }
+
+    public void OnPause(InputAction.CallbackContext context)
+    {
+        if (context.started && controlEnabled && !settingsMenu.activeInHierarchy)
+        {
+            settingsMenu.SetActive(true);
+            Debug.Log("aaa");
+        }
+        else if (context.started && controlEnabled && settingsMenu.activeInHierarchy)
+        {
+            settingsMenu.SetActive(false);
+            Debug.Log("BBBB");
+        }
+    }
+
+    IEnumerator onTakenHit()
+    {
+        spriteRenderer.color = Color.red;
+        rb.AddForceX(10f);
+        yield return new WaitForSeconds(0.5f);
+        spriteRenderer.color = Color.white;
     }
 }
