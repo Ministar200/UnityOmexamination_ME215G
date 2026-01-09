@@ -16,6 +16,7 @@ public class ContinuousMovement : MonoBehaviour
     [SerializeField] private bool activeOnStart;
 
     private Vector3 originalPosition;
+    [SerializeField] SpriteRenderer spriteRenderer;
 
     private bool active;
     
@@ -35,6 +36,13 @@ public class ContinuousMovement : MonoBehaviour
         if (active)
         {
             transform.position += (velocity * Time.deltaTime);
+        }
+
+        if (transform.position.x > originalPosition.x + 5
+            || transform.position.x < originalPosition.x - 5)
+        {
+            InvertVelocity();
+            spriteRenderer.flipX = true;    
         }
     }
 
